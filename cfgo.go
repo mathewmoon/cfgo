@@ -178,6 +178,31 @@ func (c Client) GetZone() (ZoneInfo, error) {
   return z.Result, nil
 }
 
+/* Get a single DNS record */
+func (c Client) GetSingleRecord(zid string, rid string) string {
+  var s SingleRecord
+  var si SingleRecordInfo
+
+  endpoint :=  "https://api.cloudflare.com/client/v4/zones/" + zid  "/dns_records/" + rid
+  response, err := makeRequest(c, endpoint, "GET", nil)
+  if err != nil {
+    fmt.Print(err)
+    return si, err
+  }
+
+  json.Unmarshal(response, &s)
+  fmt.Println(s)
+  /* If there is an error store the error in the Client object's lastError */
+  if !s.Success {
+    fmt.Print(s.Errors)
+    c.lastError = s.Errors
+    return s.Result, errors.New("Request Error")
+  }
+
+  fmt.Print(r)
+  return r.Result, nil
+}
+
 /* Gets All DNS Records that match `name` and `recordType` */
 func (c Client) GetRecord(name string, recordType string) (RecordInfo, error) {
   var r Record
@@ -192,7 +217,6 @@ func (c Client) GetRecord(name string, recordType string) (RecordInfo, error) {
 
   /* Make the request for the record */
   endpoint := "https://api.cloudflare.com/client/v4/zones/" + id + "/dns_records?match=all&name=" + name + "&type=" + recordType
-  fmt.Print("\n" + endpoint)
   response, err := makeRequest(c, endpoint, "GET", nil)
   if err != nil {
     fmt.Print(err)
