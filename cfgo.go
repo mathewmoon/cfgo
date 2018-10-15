@@ -243,14 +243,14 @@ func (c Client) UpdateRecord(id string, data []byte) (SingleRecordInfo, error) {
   return r.Result, nil
 }
 
-func (c Client) GetUser() UserInfo {
+func (c Client) GetUser() (UserInfo, error) {
   var u User
   var ui UserInfo
 
   /* Make the request to update the record */
 
   endpoint := "https://api.cloudflare.com/client/v4/user"
-  response, err := makeRequest(c, endpoint, "GET", data)
+  response, err := makeRequest(c, endpoint, "GET", nil)
   if err != nil {
     return ui, err
   }
