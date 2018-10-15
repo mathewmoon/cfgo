@@ -179,7 +179,7 @@ func (c Client) GetZone() (ZoneInfo, error) {
 }
 
 /* Get a single DNS record */
-func (c Client) GetSingleRecord(zid string, rid string) string {
+func (c Client) GetSingleRecord(zid string, rid string) (SingleRecordInfo, error) {
   var s SingleRecord
   var si SingleRecordInfo
 
