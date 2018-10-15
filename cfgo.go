@@ -199,8 +199,8 @@ func (c Client) GetSingleRecord(zid string, rid string) (SingleRecordInfo, error
     return s.Result, errors.New("Request Error")
   }
 
-  fmt.Print(r)
-  return r.Result, nil
+  fmt.Print(s)
+  return s.Result, nil
 }
 
 /* Gets All DNS Records that match `name` and `recordType` */
