@@ -183,7 +183,7 @@ func (c Client) GetSingleRecord(zid string, rid string) string {
   var s SingleRecord
   var si SingleRecordInfo
 
-  endpoint :=  "https://api.cloudflare.com/client/v4/zones/" + zid  "/dns_records/" + rid
+  endpoint :=  "https://api.cloudflare.com/client/v4/zones/" + zid + "/dns_records/" + rid
   response, err := makeRequest(c, endpoint, "GET", nil)
   if err != nil {
     fmt.Print(err)
