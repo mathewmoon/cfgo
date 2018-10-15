@@ -255,16 +255,15 @@ func (c Client) GetUser() (UserInfo, error) {
     return ui, err
   }
 
-  json.Unmarshal(response, &r)
+  json.Unmarshal(response, &u)
 
   /* If there is an error store the error in the Client object's lastError */
-  if !r.Success {
-    c.lastError = r.Errors
-    fmt.Print(r.Errors)
+  if !u.Success {
+    c.lastError = u.Errors
+    fmt.Print(u.Errors)
     return ui, errors.New("Request Error")
   }
 
-  fmt.Print(r.Result)
   return u.Result, nil
 
 }
