@@ -112,9 +112,11 @@ type ZoneInfo []struct {
 
 type User struct {
 	Success  bool          `json:"success"`
-	Errors   []interface{} `json:"errors"`
-	Messages []interface{} `json:"messages"`
-	Result   struct {
+	Errors   cferror `json:"errors"`
+	Result   UserInfo `json:"result"`
+}
+
+type UserInfo struct {
 		ID                             string    `json:"id"`
 		Email                          string    `json:"email"`
 		FirstName                      string    `json:"first_name"`
@@ -126,7 +128,6 @@ type User struct {
 		CreatedOn                      time.Time `json:"created_on"`
 		ModifiedOn                     time.Time `json:"modified_on"`
 		TwoFactorAuthenticationEnabled bool      `json:"two_factor_authentication_enabled"`
-	} `json:"result"`
 }
 
 type cferror []struct {
@@ -242,6 +243,31 @@ func (c Client) UpdateRecord(id string, data []byte) (SingleRecordInfo, error) {
   return r.Result, nil
 }
 
+func (c Client) GetUser() UserInfo {
+  var u User
+  var ui UserInfo
+
+  /* Make the request to update the record */
+
+  endpoint := "https://api.cloudflare.com/client/v4/user"
+  response, err := makeRequest(c, endpoint, "GET", data)
+  if err != nil {
+    return ui, err
+  }
+
+  json.Unmarshal(response, &r)
+
+  /* If there is an error store the error in the Client object's lastError */
+  if !r.Success {
+    c.lastError = r.Errors
+    fmt.Print(r.Errors)
+    return ui, errors.New("Request Error")
+  }
+
+  fmt.Print(r.Result)
+  return u.Result, nil
+
+}
 
 /* Make the request */
 func makeRequest(c Client, endpoint string, method string, data []byte) ([]byte, error) {
