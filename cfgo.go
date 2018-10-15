@@ -186,20 +186,17 @@ func (c Client) GetSingleRecord(zid string, rid string) (SingleRecordInfo, error
   endpoint :=  "https://api.cloudflare.com/client/v4/zones/" + zid + "/dns_records/" + rid
   response, err := makeRequest(c, endpoint, "GET", nil)
   if err != nil {
-    fmt.Print(err)
     return si, err
   }
 
   json.Unmarshal(response, &s)
-  fmt.Println(s)
+
   /* If there is an error store the error in the Client object's lastError */
   if !s.Success {
-    fmt.Print(s.Errors)
     c.lastError = s.Errors
     return s.Result, errors.New("Request Error")
   }
 
-  fmt.Print(s)
   return s.Result, nil
 }
 
@@ -219,20 +216,18 @@ func (c Client) GetRecord(name string, recordType string) (RecordInfo, error) {
   endpoint := "https://api.cloudflare.com/client/v4/zones/" + id + "/dns_records?match=all&name=" + name + "&type=" + recordType
   response, err := makeRequest(c, endpoint, "GET", nil)
   if err != nil {
-    fmt.Print(err)
+    c.lastError = r.Errors
     return ri, err
   }
 
   json.Unmarshal(response, &r)
-  fmt.Println(r)
+
   /* If there is an error store the error in the Client object's lastError */
   if !r.Success {
-    fmt.Print(r.Errors)
     c.lastError = r.Errors
     return r.Result, errors.New("Request Error")
   }
 
-  fmt.Print(r)
   return r.Result, nil
 }
 
@@ -259,11 +254,9 @@ func (c Client) UpdateRecord(id string, data []byte) (SingleRecordInfo, error) {
   /* If there is an error store the error in the Client object's lastError */
   if !r.Success {
     c.lastError = r.Errors
-    fmt.Print(r.Errors)
     return ri, errors.New("Request Error")
   }
 
-  fmt.Print(r.Result)
   return r.Result, nil
 }
 
@@ -284,7 +277,6 @@ func (c Client) GetUser() (UserInfo, error) {
   /* If there is an error store the error in the Client object's lastError */
   if !u.Success {
     c.lastError = u.Errors
-    fmt.Print(u.Errors)
     return ui, errors.New("Request Error")
   }
 
