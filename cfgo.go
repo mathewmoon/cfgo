@@ -5,7 +5,6 @@ import (
   "net/http"
   "time"
   "io/ioutil"
-  "fmt"
   "encoding/json"
   "bytes"
 )
